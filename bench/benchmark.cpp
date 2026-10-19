@@ -77,14 +77,14 @@ int main(int argc, char** argv) {
       }
     }
     const int reps = 20;
-    HandValue sink = 0;
+    std::uint64_t sink = 0;
     const auto t = Clock::now();
     for (int k = 0; k < reps; ++k)
-      for (Hand h : sample) sink ^= evaluate(h);
+      for (Hand h : sample) sink += evaluate(h);
     const double s = seconds_since(t);
     const double n = double(reps) * sample.size();
-    std::printf("\n    7-card evaluator: %.1fM evals/s, %.2f ns/eval  (checksum %u)\n", n / s / 1e6,
-                s / n * 1e9, sink);
+    std::printf("\n    7-card evaluator: %.1fM evals/s, %.2f ns/eval  (checksum %llu)\n", n / s / 1e6,
+                s / n * 1e9, static_cast<unsigned long long>(sink));
   }
 
   // ---------------------------------------------------------------- 2. lookups
@@ -114,7 +114,8 @@ int main(int argc, char** argv) {
     cfg.trials = trials;
     cfg.threads = threads;
     const double sim_s = simulate(cfg).seconds;
-    std::printf("    vs. simulating on demand: %.0fx faster\n", sim_s / (s / lookups));
+    std::printf("    vs. simulating %llu hands on demand: %.3fs\n",
+                static_cast<unsigned long long>(trials), sim_s);
   }
 
   // ---------------------------------------------------------------- 3. memory
