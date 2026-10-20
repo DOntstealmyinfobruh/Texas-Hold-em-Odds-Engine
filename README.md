@@ -2,12 +2,16 @@
 
 A C++17 Monte Carlo simulator that plays out **10 million poker hands in ~0.2 seconds** to estimate the win odds of any starting hand. Every hand is stored as a **single 64-bit integer**, and odds for all **169 distinct starting hands** (against 1–9 opponents) are precomputed into an 18 KB table, so preflop lookups take a few nanoseconds.
 
-| Claim | Measured (2-core cloud VM, GCC 13, `-O3 -march=native`) |
+## Performance
+
+Measured on a 2-core cloud VM with GCC 13, `-O3 -march=native`:
+
+| | |
 |---|---|
-| 10M hands in under 3 s | **0.19 s** on 2 threads, **0.41 s** single-threaded (~50M hands/s) |
-| Instant lookups for all 169 hands | **~7 ns** per lookup, 169 × 9 table = 18,252 bytes |
-| 60% less memory than card lists | **8 B** per hand vs 20 B for a 5-card `int32` list (**60%** less); vs 28 B for 7 cards (**71%** less) |
-| Correct hand evaluation | Exhaustively verified on all **133,784,560** seven-card hands |
+| Simulation | 10M hands in **0.19 s** on 2 threads, **0.41 s** single-threaded (~50M hands/s) |
+| Preflop lookup | **~7 ns** per lookup; the 169 × 9 table is 18,252 bytes |
+| Memory per hand | **8 B**, vs 20 B for a 5-card `int32` list and 28 B for 7 cards |
+| Evaluator correctness | Exhaustively verified on all **133,784,560** seven-card hands |
 
 ## Quick start
 
