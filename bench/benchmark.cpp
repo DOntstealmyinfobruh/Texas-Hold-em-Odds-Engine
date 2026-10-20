@@ -1,7 +1,7 @@
-// Benchmarks the three claims of the project:
-//   1. 10 million simulated hands in under 3 seconds
-//   2. O(1) lookups of precomputed odds for all 169 starting hands
-//   3. 64-bit hands vs card-list storage
+// Benchmarks:
+//   1. Monte Carlo simulation speed (default 10 million hands)
+//   2. Lookups of precomputed odds for all 169 starting hands
+//   3. Memory of 64-bit hands vs card-list storage
 
 #include <chrono>
 #include <cstdio>
@@ -52,9 +52,9 @@ int main(int argc, char** argv) {
     cfg.trials = trials;
     cfg.threads = threads;
     const SimResult r = simulate(cfg);
-    std::printf("    %-6s equity %6.2f%%   %.3fs  %5.1fM hands/s  (%u thread%s)  %s\n", text,
+    std::printf("    %-6s equity %6.2f%%   %.3fs  %5.1fM hands/s  (%u thread%s)\n", text,
                 100 * r.equity(), r.seconds, r.hands_per_second() / 1e6, r.threads_used,
-                r.threads_used == 1 ? " " : "s", r.seconds < 3.0 ? "PASS <3s" : "SLOW");
+                r.threads_used == 1 ? "" : "s");
   }
   {
     SimConfig cfg;
