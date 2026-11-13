@@ -22,6 +22,11 @@ if(MSVC)
   endif()
 else()
   add_compile_options(-Wall -Wextra -Wpedantic)
+  # The evaluator's lookup tables are built at compile time; Clang's default
+  # constexpr step limit (~1M) is too low for them (GCC's default is fine).
+  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_options(-fconstexpr-steps=100000000)
+  endif()
   if(HOLDEM_NATIVE)
     add_compile_options(-march=native)
   else()
